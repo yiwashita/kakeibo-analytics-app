@@ -1,3 +1,5 @@
+<!-- account\templates\account\base.html -->
+
 {% load static %}
 <!doctype html>
 <html lang="ja">
@@ -70,6 +72,8 @@
                 <img src="{% static 'images/intiki_nezumi.png' %}" alt="なっちゃん">
               {% elif user.username == "mengo" %}
                 <img src="{% static 'images/maguro-iwasi.png' %}" alt="メンゴ">
+              {% elif user.username == "guest" %}
+                <img src="{% static 'images/intiki_kaeru.png' %}" alt="guest">
               {% else %}
                 <img src="{% static 'images/kakeibo_app_logo_mini.png' %}" alt="user">
               {% endif %}
