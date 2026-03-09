@@ -20,6 +20,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 
+from account.utils.guest_utils import is_guest, mask_shop_name
+
 def _tokenize_query(q: str):
     """
     q を tokens に分解。
@@ -397,6 +399,15 @@ def transaction_list(request):
 
     transactions = qs
 
+    # ===== guest用 店名マスク =====
+    guest = is_guest(request.user)
+    for t in transactions:
+        t.display_shop = mask_shop_name(t.shop) if guest else t.shop
+
+        # クライアントに送る前にメモを空にする
+        if guest:
+            t.memo = "" 
+
     categories = Category.objects.all().order_by("id")
     members = Member.objects.all().order_by("id")
 
@@ -525,6 +536,11 @@ def transaction_rows(request):
 
     for t in neg:
         qs = qs.exclude(_build_cond_for_token(t, latest_source))
+
+    # ===== guest用 店名マスク =====
+    guest = is_guest(request.user)
+    for t in qs:
+        t.display_shop = mask_shop_name(t.shop) if guest else t.shop
 
     html = render_to_string(
         "transactions/_transaction_rows.html",
