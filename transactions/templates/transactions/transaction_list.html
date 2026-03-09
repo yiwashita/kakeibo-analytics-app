@@ -34,7 +34,7 @@
                 <th></th>
                 <th>合計</th>
                 <th>一人当たり</th>
-                <th>住信SBI振込</th>
+                <th>{% if request.user.username == "guest" %}振込{% else %}住信SBI振込{% endif %}</th>
               </tr>
             </thead>
 
@@ -75,7 +75,7 @@
               </tr>
 
               <tr>
-                <th class="rowhead">WRX</th>
+                <th class="rowhead">{% if request.user.username == "guest" %}W**{% else %}WRX{% endif %}</th>
                 <td class="num">¥{{ summary.wrx|intcomma }}</td>
                 <td class="num">¥{{ summary.wrx_per_person|intcomma }}</td>
                 <td class="num muted">—</td>
