@@ -146,6 +146,8 @@ def _decode_csv_bytes(b: bytes) -> str:
 def transaction_list(request):
 
     edit_mode = request.GET.get("edit") == "1"
+    if is_guest(request.user):
+        edit_mode = False
     show_all = request.GET.get("all") == "1"  # ★追加：最新ファイルを全行表示したい時
 
     latest_source = (
@@ -452,6 +454,8 @@ def transaction_list(request):
 def transaction_rows(request):
     # ここは transaction_list の GET 部分と同じ条件で qs を作るだけ
     edit_mode = request.GET.get("edit") == "1"
+    if is_guest(request.user):
+        edit_mode = False
     show_all = request.GET.get("all") == "1"
 
     latest_source = (
