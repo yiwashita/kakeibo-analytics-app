@@ -9,9 +9,11 @@ from account.services.eda_service import build_eda_context
 from account.services.zones_service import build_zones_context
 from account.services.prediction_breakdown_service import build_prediction_breakdown_data
 from account.utils.guest_utils import is_guest
+from account.services.home_service import build_home_context
 
 def home(request):
-    return render(request, "account/home.html")
+    context = build_home_context()
+    return render(request, "account/home.html", context)
 
 @login_required
 def csv_import(request):
