@@ -101,12 +101,12 @@ High
 **Service Layer** として実装しています。
 
 views.py  
-↓  
+   ↓  
 services/  
-eda_service.py  
-prediction_service.py  
-zones_service.py  
-event_detection_service.py  
+   ├─ eda_service.py  
+   ├─ prediction_service.py  
+   ├─ zones_service.py  
+   └─ event_detection_service.py
 
 - View → UI制御
 - Service → 分析ロジック
@@ -119,6 +119,7 @@ event_detection_service.py
 |---|---|
 Backend | Python / Django |
 Database | PostgreSQL (Supabase) |
+Data Processing | Django ORM / Python statistics
 Hosting | Render |
 
 
@@ -132,7 +133,6 @@ Hosting | Render |
 - Architecture
 - Project Map
 - Project Structure
-- Classification Rules
 - Prediction Design
 
 ---
