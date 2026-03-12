@@ -1,8 +1,111 @@
+<!-- account\templates\account\home.html -->
+
 {% extends "account/base.html" %}
 {% block title %}Home{% endblock %}
 
 {% block content %}
 <h1>Home</h1>
+
+<div class="card">
+  <div class="summary-content">
+    <div class="summary-inner">
+      <p>
+      <b>
+      クレジットカード明細をもとに、<br>
+      <span style="white-space:nowrap;">支出の分類・分析・予測を行う Django製データ分析Webアプリ</span>
+      </b>
+      </p>
+      <p>
+      もともとは家族内の精算作業を効率化する目的で作成し、<br>
+      EDA・予測・可視化まで発展させた転職用ポートフォリオです。
+      </p>
+      <p class="muted">
+        データ件数：{{ total_transactions|default:"-" }} transactions<br>
+        観測期間：
+        {% if period_start and period_end %}
+          {{ period_start }} 〜 {{ period_end }}
+        {% else %}
+          -
+        {% endif %}
+      </p>
+      <p class="muted">技術スタック：Django / Python / PostgreSQL (Supabase) / Render</p>
+      <p class="muted">
+        GitHub Repository:
+        <a href="https://github.com/yoshimu-urami-nats/kakeibo-analytics-app" target="_blank" rel="noopener noreferrer">
+          kakeibo-analytics-app
+        </a>
+      </p>
+      <p style="margin-top:6px">
+        <b>Demo Account</b><br>
+        閲覧用ゲストアカウント<br>
+        ID: guest<br>
+        Password: test012345
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <details class="acc home-acc" open>
+    <summary class="acc-title">
+      <span class="acc-label">このアプリのページ構成</span>
+    </summary>
+
+    <div class="summary-content">
+      <div class="summary-inner">
+
+        <ul>
+          <li><b>CSV Import</b><br>
+          クレジットカード明細CSVを取り込み、データベースへ登録するページ</li>
+
+          <li><b>Table</b><br>
+          登録された支出データを一覧表示し、<br>
+          検索・確認・編集やカテゴリ／メンバーの割り当てを行うデータ管理ページ</li>
+
+          <li><b>EDA</b><br>
+          支出データの分布・傾向を可視化する探索的データ分析ページ</li>
+
+          <li><b>Zones</b><br>
+          支出カテゴリごとの支出ゾーン（通常 / 注意 / 高額）を判定し、<br>
+          今月の支出増減の要因を分析するページ</li>
+
+          <li><b>Prediction</b><br>
+          過去データをもとに月次支出を予測し、<br>
+          バックテストや統計分析で予測精度を確認するページ</li>
+
+        </ul>
+
+      </div>
+    </div>
+  </details>
+</div>
+
+<div class="card">
+  <details class="acc home-acc">
+    <summary class="acc-title">
+      <span class="acc-label">システム構成</span>
+    </summary>
+
+    <div class="summary-content">
+      <div class="summary-inner">
+        <p>本アプリは、クレジットカード明細CSVを取り込み、Django上で集計・分析処理を行い、Web画面で可視化・予測結果を確認できる構成としている。</p>
+
+        <ul>
+          <li><b>入力</b>：クレジットカード明細CSV</li>
+          <li><b>Webアプリ</b>：Django</li>
+          <li><b>データ保存</b>：PostgreSQL（Supabase）</li>
+          <li><b>分析処理</b>：Python による集計・統計処理</li>
+          <li><b>画面</b>：Home / Table / EDA / Zones / Prediction</li>
+          <li><b>公開環境</b>：Render</li>
+        </ul>
+
+        <div class="callout">
+          CSV取込 → DB保存 → 集計・分析 → Web画面表示、という流れで構成している。
+        </div>
+      </div>
+    </div>
+  </details>
+</div>
 
 <!-- 1) 目的：open にして最初に見せる -->
 <div class="card">
@@ -38,7 +141,35 @@
           <li>編集モードは使用不可</li>
           <li>ゲストログインによる「閲覧専用モード」を想定</li>
         </ul>
-        <p class="muted">実データ保護のため、店名などは伏せ字・マスキング処理を行う予定。</p>
+        <p class="muted">実データ保護のため、店名などには伏せ字・マスキング処理を適用している。</p>
+      </div>
+    </div>
+  </details>
+</div>
+
+<div class="card">
+  <details class="acc home-acc">
+    <summary class="acc-title">
+      <span class="acc-label">今後の拡張予定</span>
+    </summary>
+
+    <div class="summary-content">
+      <div class="summary-inner">
+        <p>本アプリはポートフォリオとして公開しつつ、継続的に改善・拡張を進めている。</p>
+
+        <ul>
+          <li><b>イベント検知の強化</b><br>
+          旅行・大型出費・一時的な特別支出を自動判定し、通常月と分けて分析できるようにする。</li>
+
+          <li><b>カテゴリ別予測の拡張</b><br>
+          月次合計だけでなく、カテゴリ単位でも支出傾向を予測できるようにする。</li>
+
+          <li><b>支出アドバイス表示</b><br>
+          分析結果や予測結果をもとに、注意カテゴリや節約ポイントを分かりやすく表示する。</li>
+
+          <li><b>可視化ダッシュボードの改善</b><br>
+          グラフや比較表示を強化し、月ごとの変化や特徴をより直感的に把握できるようにする。</li>
+        </ul>
       </div>
     </div>
   </details>
@@ -54,7 +185,7 @@
     <div class="summary-content">
       <div class="summary-inner">
         <p>本アプリで扱うデータは、特定のクレジットカード1枚分の利用明細である。</p>
-        <p>そのため、以下の制約を持つ。</p>
+        <p>そのため、家計全体を完全に記録したデータではなく、以下の制約を持つ。</p>
 
         <h3 class="h2">データソース</h3>
         <ul><li>クレジットカード：1枚のみ</li></ul>
@@ -79,7 +210,7 @@
         </ul>
 
         <div class="callout">
-          これは「完全な家計簿」ではなく、「部分観測された支出ログ」である。
+          これは「完全な家計簿」ではなく、「特定カードの利用明細を継続観測した支出ログ」である。
         </div>
       </div>
     </div>
@@ -90,12 +221,12 @@
 <div class="card">
   <details class="acc home-acc">
     <summary class="acc-title">
-      <span class="acc-label">できること / できないこと</span>
+      <span class="acc-label">本アプリでできること / 本アプリの制約</span>
     </summary>
 
     <div class="summary-content">
       <div class="summary-inner">
-        <h3 class="h2">できること</h3>
+        <h3 class="h2">本アプリでできること</h3>
         <ul>
           <li>同一カード内での支出傾向の比較</li>
           <li>月次・カテゴリ別の推移把握</li>
@@ -104,7 +235,7 @@
           <li>このカードに限定した将来支出の予測（限定的）</li>
         </ul>
 
-        <h3 class="h2">できないこと</h3>
+        <h3 class="h2">本アプリの制約</h3>
         <ul>
           <li>家計全体の正確な総額算出</li>
           <li>現金支払いを含めた評価</li>
@@ -131,6 +262,7 @@
           <li><b>Predictionページ</b>：限定条件下での推定結果と、その解釈・限界を提示</li>
         </ul>
         <p>家計全体を網羅することはできないが、同一条件で継続的に観測できるデータとして、傾向分析・予測には十分な価値があると判断した。</p>
+        <p>あわせて、CSV取込、分類、集計、可視化、予測、ゲスト閲覧制御までを一連で実装している点も見ていただきたい。</p>
       </div>
     </div>
   </details>

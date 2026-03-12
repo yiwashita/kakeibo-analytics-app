@@ -5,63 +5,152 @@
 <h1 align="center">kakeibo-analytics-app</h1>
 
 <p align="center">
-  おうち家計簿、アプリ。
+  家計簿データを 分析・予測・可視化する Django製データ分析Webアプリ<br>
+クレジットカード明細（CSV）を読み込み、月次支出分析・異常検知・支出予測を行います
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/python-3.11-blue.svg" />
-  <img src="https://img.shields.io/badge/streamlit-app-red.svg" />
-  <img src="https://img.shields.io/badge/deploy-render-purple.svg" />
-  <img src="https://img.shields.io/badge/database-sqlite-lightgrey.svg" />
-  <img src="https://img.shields.io/badge/status-active-success.svg" />
+  <img src="https://img.shields.io/badge/Python-3.14-blue" />
+  <img src="https://img.shields.io/badge/Framework-Django-0C4B33" />
+  <img src="https://img.shields.io/badge/ORM-Django--ORM-darkgreen" />
+  <img src="https://img.shields.io/badge/Database-PostgreSQL(Supabase)-336791" />
+  <img src="https://img.shields.io/badge/Deploy-Render-6e40c9" />
+  <img src="https://img.shields.io/badge/Status-Active-brightgreen" />
 </p>
 
 
 
 ## Overview
 
-クレジットカード明細（CSV / SQLite）をもとに、  
-**月別・メンバー別・カテゴリ別** に家計の支出構造を可視化する  
-データ分析ダッシュボードです。
+クレジットカード明細（CSV）を元に
+
+- 月別・カテゴリ別の支出分析
+- メンバー別の支出集計
+- 支出の異常検知
+- 来月支出の予測（バックテスト付き）
+
+を行う **データ分析型の家計簿アプリ**です。
+
+分析ロジックは Django View から分離し、`services` 層として実装しています。
 
 
-
-## Features
-
--  月別支出推移（全体 / メンバー別）
--  月次支出合計と前年差分
--  メンバー別・カテゴリ別の支出割合
--  支出明細の一覧表示
-
-
+---
 
 ##  Live Demo
 
- https://kakeibo-analytics-app.onrender.com/
+ https://kakeibo-django.onrender.com
  
+### Demo Account
+閲覧用ゲストアカウント  
+ID: guest  
+Password: test012345  
+
+※ ゲストアカウントでは個人情報を保護するため  
+店舗名・明細情報はダミーデータ（HOGE）で表示されます。
+
+---
+
+# Features
+
+### 支出分析 (EDA)
+
+- 月次支出推移
+- カテゴリ別支出割合
+- メンバー別支出
+- 支出ランキング
+
+---
+
+### 支出ゾーン分析
+
+中央値 / 上位75% を基準に支出レベルを分類  
+Low  
+Normal  
+High  
+
+---
+
+### 支出予測
+
+線形回帰による **翌月支出予測**
+
+さらに
+
+- 過去データを用いた **バックテスト**
+- 予測誤差 / 誤差率の可視化
+- カテゴリ別寄与分析
+
+を表示します。
+
+---
+
+### 異常支出検出
+
+支出分布を元に **Zスコア分析**を行い
+
+- 異常に高い支出
+- 特異な月
+
+を検出します。
+
+---
+
+# Architecture
+
+分析ロジックは Django View から分離し  
+**Service Layer** として実装しています。
+
+views.py  
+↓  
+services/  
+eda_service.py  
+prediction_service.py  
+zones_service.py  
+event_detection_service.py  
+
+- View → UI制御
+- Service → 分析ロジック
+
+---
+
+# Tech Stack
+
+| Category | Technology |
+|---|---|
+Backend | Python / Django |
+Database | PostgreSQL (Supabase) |
+Hosting | Render |
 
 
 
+---
 
-##  Tech Stack
+# Project Docs
 
-- Python
-- pandas
-- Streamlit
-- matplotlib / Plotly
-- SQLite
-- Render
+詳細設計は `docs` フォルダにまとめています。
 
+- Architecture
+- Project Map
+- Project Structure
+- Classification Rules
+- Prediction Design
 
+---
 
-##  Data Policy
+# Data Policy
 
-- 実データはリポジトリに含めません
-- デモ / 本番はフォルダ + 環境変数で分離
-- MODE 切替はコード変更なし
+このリポジトリには実データは含まれていません。
 
+デモ環境では
 
+- 明細
+- 店舗名
+- 個人情報
 
-##  Author
+は **ダミーデータ (HOGE)** に置き換えられています。
 
-yoshimu-urami-nats
+---
+
+# Author
+
+Yoshimu U. Nats

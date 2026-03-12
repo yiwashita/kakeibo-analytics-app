@@ -1,3 +1,5 @@
+<!-- docs\Architecture.md -->
+
 # Architecture
 
 <br>
@@ -6,8 +8,6 @@
 
 本アプリは Django を中心とした単一Webアプリ構成である。  
 データ登録・編集・分析・予測までを Django 内で完結させている。  
-
-Streamlit は現在使用していない（保留）。
 
 <br>
 
@@ -23,13 +23,13 @@ Streamlit は現在使用していない（保留）。
 - 支出予測ロジック
 - Predictionページ表示
 
-予測機能も Django の view 内で処理し、  
-テンプレートにレンダリングしている。
+予測機能は Django の Service ロジックで計算し、  
+結果を View からテンプレートへレンダリングしている。
 
 <br>
 
 ## Database
-### PostgreSQL（Render Managed DB）
+### PostgreSQL（Supabase）
 
 - Django から Read / Write
 - 本番データの永続化
@@ -42,7 +42,7 @@ Streamlit は現在使用していない（保留）。
 ## Hosting
 
 - Django：Render Web Service（gunicorn）
-- DB：Render Managed PostgreSQL
+- DB：PostgreSQL（Supabase）
 
 <br>
 
@@ -50,16 +50,24 @@ Streamlit は現在使用していない（保留）。
 ### ① CSV取込・編集
 
 User  
-→ Django  
-→ PostgreSQL（Write）
+↓  
+Django  
+↓  
+PostgreSQL（Write）
 
 ### ② 分析・予測
 
 User  
-→ Django  
-→ PostgreSQL（Read）  
-→ Django 内で集計・予測計算  
-→ HTMLレンダリング  
+↓  
+Django View  
+↓  
+PostgreSQL（Read）  
+↓  
+Django Service（集計・予測）  
+↓  
+Template Rendering  
+↓  
+HTML Response  
 
 <br>
 
@@ -75,9 +83,8 @@ User
 
 ## Current Status
 
-- Streamlit：未使用（将来拡張候補）
 - 予測処理：Django 内実装
 - 認証機能：あり（複数ユーザー対応）
 - 通常ユーザー：Read / Write可能（2ユーザー運用）
-- Guestユーザー：Read Only想定
-- プライバシー保護機能（HOGEフィルター）は実装予定
+- Guestユーザー：Read Only（デモ閲覧用アカウント）
+- プライバシー保護機能（HOGEフィルター）実装済み

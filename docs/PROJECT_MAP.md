@@ -1,3 +1,5 @@
+<!-- docs\PROJECT_MAP.md -->
+
 # Kakeibo Analytics App - Project Map
 
 ## プロジェクト概要
@@ -16,45 +18,145 @@
 - CSS
 - 線形回帰（予測）
 
-
 ---
 
 ## アプリ構成
 ※「アプリ構成」は “画面の一覧” ではなく「そのURL/処理を担当する Djangoアプリ（views / models）」の責務を書く。
 
+---
 ### account
-役割：
-- Home
-- CSV Import
-- EDA
-- Zones
-- Prediction
-- Login
+役割：  
+アプリのメインUIを担当するアプリ。  
 
-主要ファイル：
+Home / CSV Import / EDA / Zones / Prediction など  
+主要画面の表示を行う。
+
+主な処理：
+- Home画面表示
+- CSV Import画面
+- EDA画面
+- Zones画面
+- Prediction画面
+- ログイン処理
+
+関連ファイル：
 - views.py
-- templates/account/*.html
+- templates/account/*
+- services/*
 
+---
+### services（account/services）
 
-### transactions
-責務：
-- 取引データの保存・編集
-- 一覧表示
-- メンバー割当（な/ゆ/共有）
-- 分類ルール適用
-- CSV取込
+役割：  
+Viewから分析ロジックを分離するサービス層。
 
-中核ファイル：
-- models.py（Transaction / Category）
-- views.py（一覧・割当・適用処理）
-- rules.py（自動分類ロジック）
-- forms.py（検索・割当UI）
+データ集計・統計処理・予測処理など  
+ビジネスロジックを担当する。
 
+主なサービス：
 
-### members
-役割：
-- メンバー管理（な / ゆ / 共有）
+- home_service.py  
+  Home画面用データ集計
 
+- eda_service.py  
+  支出統計の計算
+
+- zones_service.py  
+  支出ゾーン判定
+
+- prediction_service.py  
+  月次支出の線形回帰予測
+
+- prediction_breakdown_service.py  
+  予測の内訳計算
+
+- event_detection_service.py  
+  特殊支出イベント検出
+
+---
+### utils
+
+役割：  
+アプリ全体で利用する共通ユーティリティ。
+
+主な処理：
+
+- date_utils.py
+  日付処理
+
+- guest_utils.py
+  Guestユーザー用マスキング
+
+- stats_utils.py
+  簡易統計処理
+
+---
+## transactions
+
+役割：  
+支出データ管理アプリ。
+
+クレジットカード明細の保存・編集・分類を担当する。
+
+主な処理：
+
+- Transactionモデル管理
+- 支出一覧表示
+- カテゴリ分類
+- メンバー割当
+- CSVデータ登録
+
+関連ファイル：
+
+- models.py
+- views.py
+- forms.py
+- rules.py
+- templates/transactions/*
+
+---
+### CSV Import
+
+役割：  
+クレジットカード明細CSVを取り込み、  
+TransactionデータとしてDBへ登録する。
+
+処理フロー：
+
+CSVアップロード  
+↓  
+account.views.csv_import  
+↓  
+Transaction作成  
+↓  
+DB保存
+
+---
+### Batch Import
+
+役割：  
+過去CSVの一括インポート用スクリプト。
+
+関連ファイル：
+
+transactions/management/commands/import_past_csv.py
+
+---
+### templatetags
+
+役割：  
+テンプレート用カスタムフィルター。
+
+guest_filters.py  
+Guestユーザー用データマスキング。
+
+---
+## members
+
+役割：  
+支出のメンバー管理。
+
+支出データの「誰の支出か」を管理する。
 
 ---
 
@@ -122,7 +224,7 @@ CSV取込の実処理は transactions.views.transaction_list(POST) 側で行う
 
 CSV取込  
 ↓  
-transactions/management/commands/import_past_csv.py  
+UI Import（account.views）  
 ↓  
 Transactionテーブル保存  
 ↓  
